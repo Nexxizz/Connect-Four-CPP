@@ -13,7 +13,7 @@ void initialize(array<array <char, cols>, rows>& board);
 
 bool isNotFull(array<array <char, cols>, rows> board);
 
-void ausgabe(array<array <char, cols>, rows> board);
+void print(array<array <char, cols>, rows> board);
 
 void setStone(array<array <char, cols>, rows>& board, int inputCol, bool& playerTurn);
 
@@ -28,7 +28,7 @@ int main()
     array<array <char, cols>, rows> board {};
     bool p1Turn = true;
     initialize(board);
-    ausgabe(board);
+    print(board);
 
     int inputCol = 0;
 
@@ -45,7 +45,7 @@ int main()
             cin >> inputCol;
         }
         setStone(board, inputCol - 1, p1Turn);
-        ausgabe(board);
+        print(board);
         if (checkIfWon(board) == 1) {
             cout << "Player 1 (R = Rot) hat gewonnen" << endl;
             break;
@@ -66,7 +66,7 @@ void initialize(array<array <char, cols>, rows>& board) {
     }
 }
 
-void ausgabe(array<array <char, cols>, rows> board) {
+void print(array<array <char, cols>, rows> board) {
 
     cout << "  ";
     for (int i = 0; i < cols; ++i) {
@@ -137,8 +137,8 @@ int checkIfWon(array<array <char, cols>, rows> board) {
     //Check for Horizontal
     int countP1 = 0;
     int countP2 = 0;
-    for (int i = 0; i < rows; ++i) {
-        for (int j = 0; j < cols; ++j) {
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
             if (board.at(i).at(j) == p1Color) {
                 ++countP1;
                 countP2 = 0;
@@ -158,10 +158,9 @@ int checkIfWon(array<array <char, cols>, rows> board) {
         countP2 = 0;
     }
 
-    //Check for Vertical
-
-    for (int i = 0; i < cols; ++i) {
-        for (int j = 0; j < rows; ++j) {
+    //    //Check for Vertical
+    for (int i = 0; i < cols; i++) {
+        for (int j = 0; j < rows; j++) {
             if (board.at(j).at(i) == p1Color) {
                 ++countP1;
                 countP2 = 0;
@@ -179,6 +178,30 @@ int checkIfWon(array<array <char, cols>, rows> board) {
         }
         countP1 = 0;
         countP2 = 0;
+    }
+
+    //Check for Diagonal left to right
+    for (int i = 0; i < rows - 3; ++i) {
+        for (int j = 0; j < cols -3; ++j) {
+            if (board.at(i).at(j) == p1Color && board.at(i+1).at(j+1) == p1Color && board.at(i+2).at(j+2) == p1Color &&  board.at(i+3).at(j+3) == p1Color ) {
+                return 1;
+            }
+            else if (board.at(i).at(j) == p2Color && board.at(i+1).at(j+1) == p2Color && board.at(i+2).at(j+2) == p2Color &&  board.at(i+3).at(j+3) == p2Color ) {
+                return 2;
+            }
+        }
+    }
+
+    //Check for Diagonal right to left
+    for (int i = 0; i < rows - 3; ++i) {
+        for (int j = 0; j < cols - 3; ++j) {
+            if (board.at(i).at(j) == p1Color && board.at(i+1).at(j-1) == p1Color && board.at(i+2).at(j-2) == p1Color &&  board.at(i+3).at(j-3) == p1Color ) {
+                return 1;
+            }
+            else if (board.at(i).at(j) == p2Color && board.at(i+1).at(j-1) == p2Color && board.at(i+2).at(j-2) == p2Color &&  board.at(i+3).at(j-3) == p2Color ) {
+                return 2;
+            }
+        }
     }
     return 0;
 }
